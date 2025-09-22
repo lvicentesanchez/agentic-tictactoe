@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Select Mode</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="left-band"></div>
+    <div class="center">
+        <h1>Tic Tac Toe</h1>
+        <div class="dropdown">
+            <button class="dropbtn">⚙</button>
+            <div class="dropdown-content">
+                <div class="submenu">
+                    <a href="#" class="sub-btn">Theme</a>
+                    <div class="submenu-content">
+                        <a href="#" data-theme="light">Light <span class="check" id="light-check">✓</span></a>
+                        <a href="#" data-theme="dark">Dark <span class="check" id="dark-check">✓</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2>Select Game Mode</h2>
+        <div class="mode-selection">
+            <a href="{{ url_for('select_mode', mode='single') }}" class="mode-btn">One Player</a>
+            <a href="{{ url_for('select_mode', mode='two') }}" class="mode-btn">Two Players</a>
+        </div>
+    </div>
+    <div class="right-band"></div>
+    <script>
+        const dropbtn = document.querySelector('.dropbtn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+        const subBtn = document.querySelector('.sub-btn');
+        const submenuContent = document.querySelector('.submenu-content');
+        const lightCheck = document.getElementById('light-check');
+        const darkCheck = document.getElementById('dark-check');
+        const themeLinks = document.querySelectorAll('[data-theme]');
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateChecks(currentTheme);
+
+        dropbtn.addEventListener('click', () => {
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+            submenuContent.style.display = 'none'; // close submenu
+        });
+
+        subBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            submenuContent.style.display = submenuContent.style.display === 'block' ? 'none' : 'block';
+        });
+
+        themeLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const selectedTheme = e.target.closest('[data-theme]').getAttribute('data-theme');
+                document.documentElement.setAttribute('data-theme', selectedTheme);
+                localStorage.setItem('theme', selectedTheme);
+                updateChecks(selectedTheme);
+                dropdownContent.style.display = 'none';
+                submenuContent.style.display = 'none';
+            });
+        });
+
+        function updateChecks(theme) {
+            lightCheck.style.display = theme === 'light' ? 'inline' : 'none';
+            darkCheck.style.display = theme === 'dark' ? 'inline' : 'none';
+        }
+
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.matches('.dropbtn') && !e.target.matches('.sub-btn')) {
+                dropdownContent.style.display = 'none';
+                submenuContent.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

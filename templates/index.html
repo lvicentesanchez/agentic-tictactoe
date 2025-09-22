@@ -10,18 +10,6 @@
     <div class="left-band"></div>
     <div class="center">
         <h1>Tic Tac Toe</h1>
-        <div class="dropdown">
-            <button class="dropbtn">Settings</button>
-            <div class="dropdown-content">
-                <div class="submenu">
-                    <a href="#" class="sub-btn">Theme</a>
-                    <div class="submenu-content">
-                        <a href="#" data-theme="light">Light <span class="check" id="light-check">✓</span></a>
-                        <a href="#" data-theme="dark">Dark <span class="check" id="dark-check">✓</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="board">
         {% for i in range(3) %}
         <div class="row">
@@ -37,61 +25,18 @@
         </div>
         {% endfor %}
     </div>
-    {% if winner %}
-    <p>Winner: {{ winner }}</p>
-    {% elif full %}
-    <p>It's a draw!</p>
-    {% endif %}
-    <a href="{{ url_for('reset') }}">Reset Game</a>
+     {% if winner %}
+     <p>Player {{ winner }} wins!</p>
+     {% elif full %}
+     <p>It's a tie!</p>
+     {% endif %}
+     <a href="{{ url_for('reset') }}">Reset Game</a>
+     <a href="{{ url_for('mode_select') }}">Back to Mode Select</a>
     </div>
     <div class="right-band"></div>
     <script>
-        const dropbtn = document.querySelector('.dropbtn');
-        const dropdownContent = document.querySelector('.dropdown-content');
-        const subBtn = document.querySelector('.sub-btn');
-        const submenuContent = document.querySelector('.submenu-content');
-        const lightCheck = document.getElementById('light-check');
-        const darkCheck = document.getElementById('dark-check');
-        const themeLinks = document.querySelectorAll('[data-theme]');
-
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
-        updateChecks(currentTheme);
-
-        dropbtn.addEventListener('click', () => {
-            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-            submenuContent.style.display = 'none'; // close submenu
-        });
-
-        subBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            submenuContent.style.display = submenuContent.style.display === 'block' ? 'none' : 'block';
-        });
-
-        themeLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const selectedTheme = e.target.closest('[data-theme]').getAttribute('data-theme');
-                document.documentElement.setAttribute('data-theme', selectedTheme);
-                localStorage.setItem('theme', selectedTheme);
-                updateChecks(selectedTheme);
-                dropdownContent.style.display = 'none';
-                submenuContent.style.display = 'none';
-            });
-        });
-
-        function updateChecks(theme) {
-            lightCheck.style.display = theme === 'light' ? 'inline' : 'none';
-            darkCheck.style.display = theme === 'dark' ? 'inline' : 'none';
-        }
-
-        // Close dropdowns when clicking outside
-        window.addEventListener('click', (e) => {
-            if (!e.target.matches('.dropbtn') && !e.target.matches('.sub-btn')) {
-                dropdownContent.style.display = 'none';
-                submenuContent.style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 class TicTacToe:
-    def __init__(self):
+    def __init__(self, mode=None):
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.current_player = "X"
+        self.mode = mode
 
     def make_move(self, row, col):
         if self.board[row][col] == "":
@@ -27,4 +28,5 @@ class TicTacToe:
         return all(cell != "" for row in self.board for cell in row)
 
     def reset(self):
-        self.__init__()
+        mode = self.mode
+        self.__init__(mode)
