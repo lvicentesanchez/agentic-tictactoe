@@ -3,6 +3,7 @@ class TicTacToe:
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.current_player = "X"
         self.mode = mode
+        self.winner = None
 
     def make_move(self, row, col):
         if self.board[row][col] == "":
@@ -12,6 +13,8 @@ class TicTacToe:
         return False
 
     def check_winner(self):
+        if self.winner:
+            return self.winner
         # Check rows, columns, diagonals
         for i in range(3):
             if self.board[i][0] == self.board[i][1] == self.board[i][2] != "":
@@ -30,3 +33,12 @@ class TicTacToe:
     def reset(self):
         mode = self.mode
         self.__init__(mode)
+        self.winner = None
+
+    def ai_move(self):
+        import random
+
+        empty = [(i, j) for i in range(3) for j in range(3) if not self.board[i][j]]
+        if empty:
+            i, j = random.choice(empty)
+            self.make_move(i, j)

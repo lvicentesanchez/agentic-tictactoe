@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe - Select Mode</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="left-band"></div>
     <div class="center">
         <h1>Tic Tac Toe</h1>
         <div class="dropdown">
-            <button class="dropbtn">⚙</button>
+            <div class="dropbtn"><i class="fas fa-cog cog-icon"></i></div>
             <div class="dropdown-content">
                 <div class="submenu">
                     <a href="#" class="sub-btn">Theme</a>
@@ -30,7 +31,7 @@
     </div>
     <div class="right-band"></div>
     <script>
-        const dropbtn = document.querySelector('.dropbtn');
+        const cogIcon = document.querySelector('.cog-icon');
         const dropdownContent = document.querySelector('.dropdown-content');
         const subBtn = document.querySelector('.sub-btn');
         const submenuContent = document.querySelector('.submenu-content');
@@ -42,10 +43,12 @@
         document.documentElement.setAttribute('data-theme', currentTheme);
         updateChecks(currentTheme);
 
-        dropbtn.addEventListener('click', () => {
+        function toggleDropdown() {
             dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
             submenuContent.style.display = 'none'; // close submenu
-        });
+        }
+
+        cogIcon.addEventListener('click', toggleDropdown);
 
         subBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -65,13 +68,22 @@
         });
 
         function updateChecks(theme) {
-            lightCheck.style.display = theme === 'light' ? 'inline' : 'none';
-            darkCheck.style.display = theme === 'dark' ? 'inline' : 'none';
+            themeLinks.forEach(link => {
+                const linkTheme = link.getAttribute('data-theme');
+                link.classList.toggle('selected', linkTheme === theme);
+            });
+            lightCheck.style.opacity = theme === 'light' ? '1' : '0';
+            darkCheck.style.opacity = theme === 'dark' ? '1' : '0';
+        }
+
+        function updateChecks(theme) {
+            lightCheck.style.opacity = theme === 'light' ? '1' : '0';
+            darkCheck.style.opacity = theme === 'dark' ? '1' : '0';
         }
 
         // Close dropdowns when clicking outside
         window.addEventListener('click', (e) => {
-            if (!e.target.matches('.dropbtn') && !e.target.matches('.sub-btn')) {
+            if (!e.target.matches('.dropbtn') && !e.target.matches('.cog-icon') && !e.target.matches('.sub-btn')) {
                 dropdownContent.style.display = 'none';
                 submenuContent.style.display = 'none';
             }

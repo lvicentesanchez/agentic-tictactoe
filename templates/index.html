@@ -10,33 +10,48 @@
     <div class="left-band"></div>
     <div class="center">
         <h1>Tic Tac Toe</h1>
+        {% if ai_thinking %}
+        <p>AI is thinking...</p>
+        {% elif winner %}
+        <p>Player {{ winner }} wins!</p>
+        {% elif full %}
+        <p>It's a tie!</p>
+        {% else %}
+        <p>Player {{ game.current_player }}'s turn</p>
+        {% endif %}
         <div class="board">
         {% for i in range(3) %}
         <div class="row">
             {% for j in range(3) %}
-            <div class="cell">
-                {% if board[i][j] %}
-                {{ board[i][j] }}
-                {% else %}
-                <a href="{{ url_for('move', row=i, col=j) }}"> </a>
-                {% endif %}
-            </div>
+             <div class="cell">
+                 {% if board[i][j] or winner or ai_turn %}
+                 {{ board[i][j] }}
+                 {% else %}
+                 <a href="{{ url_for('move', row=i, col=j) }}"> </a>
+                 {% endif %}
+             </div>
             {% endfor %}
         </div>
         {% endfor %}
-    </div>
-     {% if winner %}
-     <p>Player {{ winner }} wins!</p>
-     {% elif full %}
-     <p>It's a tie!</p>
+         </div>
+     {% if not winner and not full %}
+     <a href="{{ url_for('quit_game') }}" class="quit-link">Quit</a>
      {% endif %}
-     <a href="{{ url_for('reset') }}">Reset Game</a>
-     <a href="{{ url_for('mode_select') }}">Back to Mode Select</a>
+     {% if winner %}
+     <a href="{{ url_for('mode_select') }}" class="back-link">Back to Mode Select</a>
+     {% elif full %}
+     <a href="{{ url_for('mode_select') }}" class="back-link">Back to Mode Select</a>
+     {% endif %}
     </div>
     <div class="right-band"></div>
     <script>
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
+        {% if ai_thinking %}
+        setTimeout(() => {
+            window.location.href = '/ai_move';
+        }, 1500);
+        {% endif %}
     </script>
 </body>
 </html>
