@@ -19,6 +19,7 @@
 - Do not commit changes until explicitly instructed by the user.
 - Always run lint and format checks before committing.
 - Use descriptive commit messages; if multiple significant changes have been done, include a list of changes.
+- Do not open pull requests unless explicitly instructed by the user.
 
 ## Project Structure
 - `game.py`: Core TicTacToe class with game logic
