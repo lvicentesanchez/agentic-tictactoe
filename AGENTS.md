@@ -3,7 +3,7 @@
 ## Commands
 - **Install**: `uv sync`
 - **Run**: `python main.py` or `uv run python main.py`
-- **Test**: No tests configured - add pytest to pyproject.toml for testing
+- **Test**: `uv run pytest`
 - **Lint**: `uv run ruff check .` and `uv run ruff format .` (run after all changes)
 
 **Important**: Never run the Flask app (`python main.py`) inside opencode as it will block the session.
@@ -20,6 +20,7 @@
 ## Commit Policy
 - Do not commit changes until explicitly instructed by the user.
 - Always run lint and format checks before committing.
+- Always run tests before committing.
 - Use descriptive commit messages; if multiple significant changes have been done, include a list of changes.
 - Do not open pull requests unless explicitly instructed by the user.
 
