@@ -6,6 +6,8 @@
 - **Test**: No tests configured - add pytest to pyproject.toml for testing
 - **Lint**: `uv run ruff check .` and `uv run ruff format .` (run after all changes)
 
+**Important**: Never run the Flask app (`python main.py`) inside opencode as it will block the session.
+
 ## Code Style
 - **Python**: 3.11+, Flask framework, class-based design
 - **Naming**: snake_case for functions/variables, PascalCase for classes

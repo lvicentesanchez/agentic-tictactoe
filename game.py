@@ -1,8 +1,12 @@
+from ai import AIStrategy
+
+
 class TicTacToe:
-    def __init__(self, mode=None):
+    def __init__(self, mode=None, ai_strategy: AIStrategy = None):
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.current_player = "X"
         self.mode = mode
+        self.ai_strategy = ai_strategy
         self.winner = None
 
     def make_move(self, row, col):
@@ -32,13 +36,12 @@ class TicTacToe:
 
     def reset(self):
         mode = self.mode
-        self.__init__(mode)
+        ai_strategy = self.ai_strategy
+        self.__init__(mode, ai_strategy)
         self.winner = None
 
     def ai_move(self):
-        import random
-
-        empty = [(i, j) for i in range(3) for j in range(3) if not self.board[i][j]]
-        if empty:
-            i, j = random.choice(empty)
-            self.make_move(i, j)
+        if self.ai_strategy:
+            move = self.ai_strategy.get_move(self.board)
+            if move:
+                self.make_move(*move)

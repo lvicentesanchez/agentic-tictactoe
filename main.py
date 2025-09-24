@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, url_for
 from game import TicTacToe
+from ai import RandomAI
 
 app = Flask(__name__)
-game = TicTacToe()
+ai_strategy = RandomAI()
+game = TicTacToe(ai_strategy=ai_strategy)
 game_mode = None
 
 
