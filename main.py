@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, url_for
 from game import TicTacToe
-from ai import RandomAI
+from ai import MinimaxAI
 
 app = Flask(__name__)
-ai_strategy = RandomAI()
+ai_strategy = MinimaxAI()
 game = TicTacToe(ai_strategy=ai_strategy)
 game_mode = None
 

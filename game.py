@@ -1,8 +1,10 @@
+from typing import Optional
 from ai import AIStrategy
+import game_utils as gu
 
 
 class TicTacToe:
-    def __init__(self, mode=None, ai_strategy: AIStrategy = None):
+    def __init__(self, mode=None, ai_strategy: Optional[AIStrategy] = None):
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.current_player = "X"
         self.mode = mode
@@ -19,20 +21,11 @@ class TicTacToe:
     def check_winner(self):
         if self.winner:
             return self.winner
-        # Check rows, columns, diagonals
-        for i in range(3):
-            if self.board[i][0] == self.board[i][1] == self.board[i][2] != "":
-                return self.board[i][0]
-            if self.board[0][i] == self.board[1][i] == self.board[2][i] != "":
-                return self.board[0][i]
-        if self.board[0][0] == self.board[1][1] == self.board[2][2] != "":
-            return self.board[0][0]
-        if self.board[0][2] == self.board[1][1] == self.board[2][0] != "":
-            return self.board[0][2]
-        return None
+        self.winner = gu.check_winner(self.board)
+        return self.winner
 
     def is_full(self):
-        return all(cell != "" for row in self.board for cell in row)
+        return gu.is_board_full(self.board)
 
     def reset(self):
         mode = self.mode
