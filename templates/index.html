@@ -19,30 +19,36 @@
         {% else %}
         <p>Player {{ current_player }}'s turn</p>
         {% endif %}
-        <div class="board">
-        {% for i in range(3) %}
-        <div class="row">
-            {% for j in range(3) %}
-             <div class="cell">
-                 {% if board[i][j] or winner or ai_turn %}
-                 {{ board[i][j] }}
-                 {% else %}
-                 <a href="{{ url_for('move', row=i, col=j) }}"> </a>
-                 {% endif %}
-             </div>
+        <div class="game-container">
+            <div class="board">
+            {% for i in range(3) %}
+                {% for j in range(3) %}
+                 <div class="cell">
+                     {% if board[i][j] or winner or ai_turn %}
+                     {{ board[i][j] }}
+                     {% else %}
+                     <a href="{{ url_for('move', row=i, col=j) }}"> </a>
+                     {% endif %}
+                 </div>
+                {% endfor %}
             {% endfor %}
-        </div>
-        {% endfor %}
+             </div>
+         {% if not winner and not full %}
+         <div class="game-actions-container">
+             <div class="game-action-buttons">
+                 <a href="{{ url_for('reset') }}" class="game-action-button">Reset</a>
+                 <a href="{{ url_for('quit_game') }}" class="game-action-button">Quit</a>
+             </div>
          </div>
-     {% if not winner and not full %}
-     <a href="{{ url_for('reset') }}" class="reset-link">Reset</a>
-     <a href="{{ url_for('quit_game') }}" class="quit-link">Quit</a>
-     {% endif %}
-     {% if winner %}
-     <a href="{{ url_for('mode_select') }}" class="back-link">Back to Mode Select</a>
-     {% elif full %}
-     <a href="{{ url_for('mode_select') }}" class="back-link">Back to Mode Select</a>
-     {% endif %}
+         {% endif %}
+         {% if winner or full %}
+         <div class="game-actions-container">
+             <div class="game-action-buttons">
+                 <a href="{{ url_for('mode_select') }}" class="game-action-button">Main Menu</a>
+             </div>
+         </div>
+         {% endif %}
+        </div>
     </div>
     <div class="right-band"></div>
     <script>
