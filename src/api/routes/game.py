@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_restx import Api, Resource, fields
-from ..services.game_service import GameService
-from ..models import AIConfig
+from services.game_service import GameService
+from models import AIConfig
 
 
 # Create Blueprint and API

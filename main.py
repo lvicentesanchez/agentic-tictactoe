@@ -1,53 +1,94 @@
 from flask import Flask, render_template, redirect, url_for
-from game import TicTacToe
-from ai import MinimaxAI
+import sys
+import os
 
+# Add src to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+
+from services.game_service import GameService
+from models.game import AIConfig
+from config.settings import settings
+
+# Initialize Flask app
 app = Flask(__name__)
-ai_strategy = MinimaxAI()
-game = TicTacToe(ai_strategy=ai_strategy)
-game_mode = None
+
+# Configure app
+app.config["DEBUG"] = settings.debug
+app.config["SECRET_KEY"] = (
+    "your-secret-key-here"  # In production, use environment variable
+)
+
+# Initialize services
+game_service = GameService()
+
+# Global game state for simple web interface
+current_game_id = None
 
 
 @app.route("/")
 def index():
-    if game_mode is None:
+    """Home page - redirect to mode selection if no game is active."""
+    global current_game_id
+    if current_game_id is None:
         return redirect(url_for("mode_select"))
     return redirect(url_for("game_view"))
 
 
 @app.route("/mode_select")
 def mode_select():
-    global game_mode
-    game_mode = None
-    game.reset()
+    """Game mode selection page."""
+    global current_game_id
+    current_game_id = None
     return render_template("mode_select.html")
 
 
 @app.route("/select_mode/<mode>")
 def select_mode(mode):
-    global game_mode
-    game_mode = mode
-    game.mode = mode
-    game.reset()
-    game.current_player = "X"  # Human starts first
+    """Select game mode and create new game."""
+    global current_game_id
+
+    if mode not in ["single", "two"]:
+        return redirect(url_for("mode_select"))
+
+    # Create AI config for single player mode
+    ai_config = None
+    if mode == "single":
+        ai_config = AIConfig(
+            strategy_type="minimax", symbol="O", max_depth=settings.ai_max_depth
+        )
+
+    current_game_id = game_service.create_new_game(mode, ai_config)
     return redirect(url_for("game_view"))
 
 
 @app.route("/game")
 def game_view():
+    """Main game view."""
+    global current_game_id
+
+    if current_game_id is None:
+        return redirect(url_for("mode_select"))
+
+    game_state = game_service.get_game_state(current_game_id)
+    if not game_state:
+        return redirect(url_for("mode_select"))
+
+    # Check if it's AI's turn
     ai_turn = (
-        game_mode == "single"
-        and game.current_player == "O"
-        and not game.check_winner()
-        and not game.is_full()
+        game_state.mode == "single"
+        and game_state.current_player == "O"
+        and not game_state.winner
+        and not game_state.is_full
     )
+
     return render_template(
         "index.html",
-        board=game.board,
-        winner=game.check_winner(),
-        full=game.is_full(),
-        mode=game_mode,
-        game=game,
+        game_id=current_game_id,
+        board=game_state.board,
+        winner=game_state.winner,
+        full=game_state.is_full,
+        mode=game_state.mode,
+        current_player=game_state.current_player,
         ai_turn=ai_turn,
         ai_thinking=False,
     )
@@ -55,42 +96,72 @@ def game_view():
 
 @app.route("/move/<int:row>/<int:col>")
 def move(row, col):
-    if game.make_move(row, col):
-        winner = game.check_winner()
-        full = game.is_full()
-        if game_mode == "single" and not winner and not full:
-            ai_turn = True
-            return render_template(
-                "index.html",
-                board=game.board,
-                winner=winner,
-                full=full,
-                mode=game_mode,
-                game=game,
-                ai_turn=ai_turn,
-                ai_thinking=True,
-            )
-    return redirect(url_for("game_view"))
+    """Handle player move."""
+    global current_game_id
 
+    if current_game_id is None:
+        return redirect(url_for("mode_select"))
 
-@app.route("/reset")
-def reset():
-    game.reset()
-    return redirect(url_for("game_view"))
+    result = game_service.make_move(current_game_id, row, col)
+    game_state = result.game_state
 
+    if game_state.mode == "single" and not game_state.winner and not game_state.is_full:
+        # AI's turn
+        ai_turn = True
+        return render_template(
+            "index.html",
+            game_id=current_game_id,
+            board=game_state.board,
+            winner=game_state.winner,
+            full=game_state.is_full,
+            mode=game_state.mode,
+            current_player=game_state.current_player,
+            ai_turn=ai_turn,
+            ai_thinking=True,
+        )
 
-@app.route("/quit")
-def quit_game():
-    if not game.check_winner() and not game.is_full():
-        game.winner = "O" if game.current_player == "X" else "X"
     return redirect(url_for("game_view"))
 
 
 @app.route("/ai_move")
 def ai_move():
-    game.ai_move()
+    """Handle AI move."""
+    global current_game_id
+
+    if current_game_id is None:
+        return redirect(url_for("mode_select"))
+
+    game_service.make_ai_move(current_game_id)
     return redirect(url_for("game_view"))
 
 
+@app.route("/reset")
+def reset():
+    """Reset current game."""
+    global current_game_id
+
+    if current_game_id is not None:
+        game_service.reset_game(current_game_id)
+
+    return redirect(url_for("game_view"))
+
+
+@app.route("/quit")
+def quit_game():
+    """Quit current game."""
+    global current_game_id
+
+    if current_game_id is not None:
+        game_service.quit_game(current_game_id)
+
+    return redirect(url_for("game_view"))
+
+
+@app.route("/api/health")
+def health_check():
+    """Health check endpoint."""
+    return {"status": "healthy", "version": "1.0.0"}
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host=settings.host, port=settings.port, debug=settings.debug)

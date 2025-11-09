@@ -1,8 +1,8 @@
 import random
 from abc import ABC, abstractmethod
 from typing import Optional, Tuple, List
-from ..utils.game_utils import check_winner, is_board_full
-from ..services.cache_service import ai_cache
+from utils.game_utils import check_winner, is_board_full
+from services.cache_service import ai_cache
 
 
 class AIStrategy(ABC):

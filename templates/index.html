@@ -35,6 +35,7 @@
         {% endfor %}
          </div>
      {% if not winner and not full %}
+     <a href="{{ url_for('reset') }}" class="reset-link">Reset</a>
      <a href="{{ url_for('quit_game') }}" class="quit-link">Quit</a>
      {% endif %}
      {% if winner %}
