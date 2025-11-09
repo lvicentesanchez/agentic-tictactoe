@@ -1,15 +1,16 @@
 # Tic-Tac-Toe Agent Guidelines
 
 ## Commands
-- **Install**: `uv sync`
-- **Run**: `python main_refactored.py` or `uv run python main_refactored.py`
+- **Install**: `uv sync` and `npm install`
+- **Run**: `python main.py` or `uv run python main.py`
 - **Test**: `uv run pytest` (all tests) or `uv run pytest tests/test_game_service.py::TestGameService::test_create_single_player_game` (single test)
 - **Lint**: `uv run ruff check .` and `uv run ruff format .` (run after all changes)
 - **Type Check**: `uv run mypy src/` (static type checking)
 - **Coverage**: `uv run pytest --cov=src --cov-report=html` (coverage report)
 - **Pre-commit**: `uv run pre-commit run --all-files` (run all hooks)
+- **CSS Build**: `npm run build-css-prod` (production) or `npm run build-css` (development with watch)
 
-**Important**: Never run the Flask app (`python main_refactored.py`) inside opencode as it will block the session.
+**Important**: Never run the Flask app (`python main.py`) inside opencode as it will block the session.
 
 ## Code Style
 - **Python**: 3.11+, Flask framework, class-based design, type hints required
@@ -56,7 +57,9 @@ tests/
 └── test_game_service.py # Service layer tests
 templates/              # Jinja2 HTML templates
 static/                 # CSS and assets
-main_refactored.py      # Refactored Flask application
+main.py                 # Flask application
+package.json             # Node.js dependencies and scripts
+tailwind.config.js       # Tailwind CSS configuration
 ```
 
 ## Development Workflow
@@ -66,3 +69,4 @@ main_refactored.py      # Refactored Flask application
 4. Run type checking: `uv run mypy src/`
 5. Check coverage: `uv run pytest --cov=src`
 6. Run pre-commit hooks: `uv run pre-commit run --all-files`
+7. If CSS changes were made, rebuild: `npm run build-css-prod`
