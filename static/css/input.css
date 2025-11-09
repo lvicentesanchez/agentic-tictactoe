@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom theme variables */
+:root {
+  --bg-color: #fff;
+  --text-color: #000;
+  --border-color: #000;
+  --link-color: #007bff;
+  --hover-bg: #f0f0f0;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --border-color: #e0e0e0;
+  --link-color: #4fc3f7;
+  --hover-bg: #333;
+}
+
+/* Custom components */
+body {
+  @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.board {
+  @apply inline-block border-2 border-gray-800 dark:border-gray-200;
+}
+
+.cell {
+  @apply w-20 h-20 border-2 border-gray-800 dark:border-gray-200 flex items-center justify-center text-4xl font-bold;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.cell a {
+  @apply w-full h-full block no-underline;
+}
+
+.cell a:hover {
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.mode-btn {
+  @apply block px-5 py-2 border-2 border-gray-800 dark:border-gray-200 text-center w-48 no-underline;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.mode-btn:hover {
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.left-band, .right-band {
+  @apply w-screen md:w-1/6 lg:w-1/5;
+}
+
+.center {
+  @apply flex-1 text-center relative py-8;
+}
+
+.dropdown {
+  @apply absolute top-2 right-2 inline-block;
+}
+
+.dropbtn {
+  @apply bg-transparent text-gray-900 dark:text-gray-100 border-none cursor-pointer flex items-center justify-center w-10 h-10 text-xl;
+}
+
+.dropdown-content {
+  @apply hidden absolute bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 z-10 min-w-32;
+}
+
+.dropdown-content a {
+  @apply text-gray-900 dark:text-gray-100 px-3 py-2 block no-underline;
+}
+
+.dropdown-content a:hover {
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.submenu-content {
+  @apply hidden absolute left-full top-0 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 min-w-32;
+}
+
+.check {
+  @apply ml-auto;
+}
+
+.quit-link, .back-link {
+  @apply block text-center my-2 no-underline text-blue-600 dark:text-blue-400;
+}
+
+.quit-link:hover, .back-link:hover {
+  @apply underline;
+}
