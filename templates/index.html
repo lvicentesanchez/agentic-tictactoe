@@ -17,7 +17,7 @@
         {% elif full %}
         <p>It's a tie!</p>
         {% else %}
-        <p>Player {{ game.current_player }}'s turn</p>
+        <p>Player {{ current_player }}'s turn</p>
         {% endif %}
         <div class="board">
         {% for i in range(3) %}
